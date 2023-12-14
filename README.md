@@ -9,10 +9,17 @@ cd nimiq-browser
 npm install
 ```
 
-3. Update your config
+3. Update config.json
+
 ```
-const token = "6sBXGL6gXJijiCBA" --> Get after register account
-const url = "https://nimiq.vercel.app?wallet=[address]&host=pool.nimiq.watch&port=8443&threads=4&autostart=1"
+{
+    "host": "pool.acemining.co",                       --> Pool host
+    "port": "8443",                                    --> Pool port
+    "wallet": "NQ08SUEHT0GSPCDJHUNXQ50HB0M0ABHAPP03",  --> Your Nimiq wallet address
+    "threads": 8,                                      --> CPU threads to Mining
+    "autostart": true,                                 --> Auto start mining
+    "token": null                                      --> Get from Browsercloud Dashboard
+}
 ```
 
 4. Start mining
