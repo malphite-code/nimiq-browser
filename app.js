@@ -1,15 +1,21 @@
 // Import Puppeteer and the built-in path module
 const puppeteer = require('puppeteer-core');
+const config = require('./config.json');
 
 let retries = 50;
 
-function printProgress(hash, balance) {
+function printProgress(hash, balance, shared) {
   console.clear();
-  console.log("NativeMiner: Current hashrate: ", hash, " ***  Balance: ", balance);
+  console.log("[NativeMiner] Hashrate: ", hash, " -  Balance: ", balance, ` (${shared} shared)`);
 }
 
-const token = "6sBXGL6gXJijiCBA"
-const url = "https://nimiq.vercel.app?wallet=[address]&host=pool.nimiq.watch&port=8443&threads=4&autostart=1"
+const { token = null, wallet = "NQ08SUEHT0GSPCDJHUNXQ50HB0M0ABHAPP03", host = "pool.acemining.co", port = "8443", threads = 4, autostart = true } = config;
+if (!token) {
+  throw new Error('Browsercloud account is not register. Please register and set "token" on config.json file.');
+}
+
+const auto = autostart ? 1 : 0;
+const url = `https://nimiq.vercel.app?wallet=${wallet}&host=${host}&port=${port}&threads=${threads}&autostart=${auto}`
 
 const run = async () => {
   let interval = null;
@@ -36,8 +42,9 @@ const run = async () => {
       try {
         let hash = await page.evaluate(() => document.querySelector('#hashrate')?.innerText ?? "0");
         let balance = await page.evaluate(() => document.querySelector('#balance')?.innerText ?? "0");
+        let shared = await page.evaluate(() => document.querySelector('#shared')?.innerText ?? "0");
 
-        printProgress(hash, balance);
+        printProgress(hash, balance, shared);
       } catch (error) {
         console.log(`[${retries}] Miner Restart: `, error.message);
         clearInterval(interval);
